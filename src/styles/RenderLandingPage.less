@@ -41,17 +41,41 @@
     font-size: 1.2rem;
 }
 
-// .graphs-section {
-//  ADD THIS BACK IN WHEN YOU HAVE THE GRAPHS SECTION
-// }
+.graphs-section {
+    display: flex;
+    justify-content: space-around;
+    margin: 5% auto;
+}
 
-.view-more-data-btn-container {
+.graphs-section img {
+    margin: 20px;
+    height: 300px;
+}
+
+.graphs-section h3 {
+    font-family: 'beatrice regular';
+    text-align: center;
+    font-size: 1.6rem;
+}
+//created a flexbox to manipulate the positions of both view more button and download data button
+.view-more-and-download-data-btn-container {
+    display: flex;
+    column-gap: 20px;
+    justify-content: center;
     height: 44px;
     width: 180px;
-    margin: 0 auto;
+    margin: 0 auto ;
     text-align: center;
     margin-bottom: 10%;
 }
+
+// .view-more-data-btn-container {
+//     height: 44px;
+//     width: 180px;
+//     margin: 0 auto ;
+//     text-align: center;
+//     margin-bottom: 10%;
+// }
 
 .middle-section {
     display: flex;
@@ -75,9 +99,49 @@
     font-size: 1.4rem;
 }
 
-// .bottom-section {
-//      ADD THIS BACK IN WHEN YOU HAVE A BOTTOM SECTION
-// }
+.bottom-section button {
+    align-content: center;
+}
+
+.bottom-section-header-container {
+    font-family: "acumin";
+    font-size: 2rem;
+    color: @white;
+    font-family: 'moneta';
+    text-align: center;
+    margin: 10% auto;
+}
+
+.bottom-section-stats-container {
+    font-family: "acumin";
+    display: flex;
+    gap: 10%;
+    align-content: center;
+    text-align: center;
+    margin: auto 5%
+}
+
+.bottom-section-stats-container h3 {
+    font-size: 2rem ;
+}
+
+.bottom-section-stats-container p {
+    font-size: 1rem;
+    word-wrap: break-word;
+}
+
+.read-more-btn-container {
+    display: flex;
+    column-gap: 20px;
+    justify-content: center;
+    height: 44px;
+    width: 180px;
+    margin: 0 auto ;
+    text-align: center;
+    margin: 10% auto;
+}
+
+
 
 .back-to-top {
     width: 8%;
