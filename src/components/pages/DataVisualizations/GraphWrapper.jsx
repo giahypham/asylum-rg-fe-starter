@@ -15,6 +15,7 @@ import { colors } from '../../../styles/data_vis_colors';
 import ScrollToTopOnMount from '../../../utils/scrollToTopOnMount';
 
 const { background_color } = colors;
+const baseUrl = 'https://hrf-asylum-be-b.herokuapp.com/cases';
 
 function GraphWrapper(props) {
   const { set_view, dispatch } = props;
@@ -50,61 +51,70 @@ function GraphWrapper(props) {
         break;
     }
   }
-  function updateStateWithNewData(years, view, office, stateSettingCallback) {
-    /*
-          _                                                                             _
-        |                                                                                 |
-        |   Example request for once the `/summary` endpoint is up and running:           |
-        |                                                                                 |
-        |     `${url}/summary?to=2022&from=2015&office=ZLA`                               |
-        |                                                                                 |
-        |     so in axios we will say:                                                    |
-        |                                                                                 |     
-        |       axios.get(`${url}/summary`, {                                             |
-        |         params: {                                                               |
-        |           from: <year_start>,                                                   |
-        |           to: <year_end>,                                                       |
-        |           office: <office>,       [ <-- this one is optional! when    ]         |
-        |         },                        [ querying by `all offices` there's ]         |
-        |       })                          [ no `office` param in the query    ]         |
-        |                                                                                 |
-          _                                                                             _
-                                   -- Mack 
-    
-    */
-
+  async function updateStateWithNewData(years, view, office, stateSettingCallback) {
     if (office === 'all' || !office) {
-      axios
-        .get(process.env.REACT_APP_API_URI, {
-          // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
+      try {
+        //API call for fiscalSummary
+        const fiscalResponse = await axios.get(`${baseUrl}/fiscalSummary`, {
           params: {
             from: years[0],
             to: years[1],
           },
-        })
-        .then(result => {
-          stateSettingCallback(view, office, test_data); // <-- `test_data` here can be simply replaced by `result.data` in prod!
-        })
-        .catch(err => {
-          console.error(err);
         });
+        console.log("fiscal", fiscalResponse);
+        //API call for citizenshipSummary
+        const citizenshipResponse = await axios.get(`${baseUrl}/citizenshipSummary`, {
+          params: {
+            from: years[0],
+            to: years[1],
+          },
+        });
+        console.log('cit', citizenshipResponse);
+        //Extracting data from both endpoints responses
+        const fiscalData = fiscalResponse.data;
+        const citizenshipData = citizenshipResponse.data;
+
+        //Adding a new key in fiscalData called citizenshipResults with data from citizenshipData
+        fiscalData.citizenshipResults = citizenshipData;
+        
+        //Update state with newly called data in a form of an array
+        stateSettingCallback(view, office, [fiscalData]);
+      } catch(err) {
+        console.error(err);
+      }
     } else {
-      axios
-        .get(process.env.REACT_APP_API_URI, {
-          // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
+      try {
+        //API call for fiscalSummary with office selected
+        const fiscalResponse = await axios.get(`${baseUrl}/fiscalSummary`, {
           params: {
             from: years[0],
             to: years[1],
             office: office,
           },
-        })
-        .then(result => {
-          stateSettingCallback(view, office, test_data); // <-- `test_data` here can be simply replaced by `result.data` in prod!
-        })
-        .catch(err => {
-          console.error(err);
         });
+        console.log('fiscalOffice', fiscalResponse);
+        //API call for citizenshipSummary
+        const citizenshipResponse = await axios.get(`${baseUrl}/citizenshipSummary`, {
+          params: {
+            from: years[0],
+            to: years[1],
+          },
+        });
+        console.log('citOffice', citizenshipResponse);
+        //Extracting data from both endpoints responses
+        const fiscalData = fiscalResponse.data;
+        const citizenshipData = citizenshipResponse.data;
+
+        //Adding a new key in fiscalData called citizenshipResults with data from citizenshipData
+        fiscalData.citizenshipResults = citizenshipData;
+        
+        //Update state with newly called data in a form of an array
+        stateSettingCallback(view, office, [fiscalData]);
+      } catch(err) {
+        console.error(err);
+      }
     }
+
   }
   const clearQuery = (view, office) => {
     dispatch(resetVisualizationQuery(view, office));
