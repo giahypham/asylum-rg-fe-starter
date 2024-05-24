@@ -10,12 +10,12 @@ import YearLimitsSelect from './YearLimitsSelect';
 import ViewSelect from './ViewSelect';
 import axios from 'axios';
 import { resetVisualizationQuery } from '../../../state/actionCreators';
-import test_data from '../../../data/test_data.json';
+// import test_data from '../../../data/test_data.json';
 import { colors } from '../../../styles/data_vis_colors';
 import ScrollToTopOnMount from '../../../utils/scrollToTopOnMount';
 
 const { background_color } = colors;
-const baseUrl = 'https://hrf-asylum-be-b.herokuapp.com/cases';
+const baseUrl = 'https://hrf-asylum-be-b.herokuapp.com/cases'; //Created a baseUrl for later API calls
 
 function GraphWrapper(props) {
   const { set_view, dispatch } = props;
@@ -61,7 +61,7 @@ function GraphWrapper(props) {
             to: years[1],
           },
         });
-        console.log("fiscal", fiscalResponse);
+        console.log("fiscal", fiscalResponse); //See result data in console
         //API call for citizenshipSummary
         const citizenshipResponse = await axios.get(`${baseUrl}/citizenshipSummary`, {
           params: {
